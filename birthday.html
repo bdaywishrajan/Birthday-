@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Happy Birthday 🎂</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Pacifico&display=swap" rel="stylesheet">
+<style>
+:root{--bg1:#f3e8ff;--bg2:#ffe9c7;--card:#fffaf2;--text:#3b1f5c;--accent:#9b3dd8;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg1:#1a0f2e;--bg2:#2d1650;--card:#150b26;--text:#f5e9ff;--accent:#b66dff}}
+:root[data-theme="dark"]{--bg1:#1a0f2e;--bg2:#2d1650;--card:#150b26;--text:#f5e9ff;--accent:#b66dff}
+*{box-sizing:border-box}
+html,body{min-height:100%;margin:0}
+body{background:linear-gradient(160deg,var(--bg1),var(--bg2));color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;display:flex;padding:16px;overflow-x:hidden}
+.card{background:var(--card);border-radius:24px;padding:28px 22px;max-width:420px;width:100%;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,.15);margin:auto}
+.big{font-size:64px}
+.cake{animation:bounce 1.6s infinite}
+@keyframes bounce{50%{transform:translateY(-10px)}}
+h1{margin:8px 0 4px;font-size:28px;color:var(--accent);font-family:"Pacifico",cursive;font-weight:400}
+.sub{margin:0 0 16px;opacity:.8}
+input{width:100%;font-size:22px;letter-spacing:6px;text-align:center;padding:12px;border-radius:14px;border:2px solid var(--accent);background:transparent;color:var(--text);outline:none}
+.err{min-height:22px;margin-top:8px;color:#e5484d;font-size:14px}
+button{margin-top:12px;background:var(--accent);color:#fff;border:0;border-radius:999px;padding:12px 26px;font-size:16px;cursor:pointer}
+.para{font-family:"Caveat","Segoe Script",cursive;font-size:25px;font-weight:500;line-height:1.5;text-align:left;min-height:200px;margin:14px 0 0;white-space:pre-wrap}
+.sign{margin-top:14px;font-family:"Caveat","Segoe Script",cursive;font-size:26px;font-weight:700;color:var(--accent);text-align:right;opacity:0;transition:opacity .8s}
+.hide{display:none}
+.fall{position:fixed;top:-30px;font-size:24px;animation:fall linear forwards;pointer-events:none}
+@keyframes fall{to{transform:translateY(110vh) rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="card" id="lock">
+  <div class="big">🔒</div>
+  <h1>Secret Code Podu!</h1>
+  <p class="sub">Un birthday ku oru surprise irukku 🎁</p>
+  <input id="code" type="text" inputmode="numeric" maxlength="6" placeholder="••••••" autocomplete="off">
+  <div class="err" id="err"></div>
+  <button id="open">Open 🔓</button>
+</div>
+
+<div class="card hide" id="main">
+  <div class="big cake">🎂</div>
+  <div class="para" id="para"></div>
+  <div class="sign" id="sign">- PW friend 🤝</div>
+</div>
+
+<script>
+var CODE = "291017";
+
+var raw = "";
+try { raw = decodeURIComponent((location.hash || "").slice(1)); } catch (e) {}
+var nm = raw ? ", " + raw : "";
+
+var text = "Happy Birthday" + nm + "! 🎂\n\n" +
+  "Indha year unaku full happiness, health, success ellam kedaikanum. " +
+  "Nee eppavum ipdi smile pannitu irukanum 😊 " +
+  "Un kanavu ellam nanavaganum, ennaikum santhosama irukanum ✨ " +
+  "Indha birthday unaku romba special ah irukattum 🎁\n\n" +
+  "Treat enga? 😄 Many many happy returns of the day! 🎉";
+
+function rain() {
+  var items = ["🎉", "🎈", "✨", "🎂", "🎁"];
+  for (var k = 0; k < 18; k++) {
+    var s = document.createElement("span");
+    s.className = "fall";
+    s.textContent = items[Math.floor(Math.random() * items.length)];
+    s.style.left = Math.random() * 100 + "vw";
+    s.style.animationDuration = (2 + Math.random() * 2.5) + "s";
+    document.body.appendChild(s);
+    setTimeout(function (el) { el.remove(); }.bind(null, s), 5000);
+  }
+}
+
+function typeText() {
+  var chars = Array.from(text), k = 0, buf = "";
+  var el = document.getElementById("para");
+  var t = setInterval(function () {
+    buf += chars[k++];
+    el.textContent = buf;
+    if (k >= chars.length) {
+      clearInterval(t);
+      document.getElementById("sign").style.opacity = 1;
+      rain();
+    }
+  }, 45);
+}
+
+function tryOpen() {
+  var v = document.getElementById("code").value.trim();
+  if (v === CODE) {
+    document.getElementById("lock").classList.add("hide");
+    document.getElementById("main").classList.remove("hide");
+    rain();
+    typeText();
+  } else {
+    document.getElementById("err").textContent = "Wrong code 😅 thirumba try pannu";
+  }
+}
+document.getElementById("open").onclick = tryOpen;
+document.getElementById("code").addEventListener("keydown", function (e) { if (e.key === "Enter") tryOpen(); });
+</script>
+</body>
+</html>
